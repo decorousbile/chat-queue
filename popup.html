@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perplexity Chat Queue</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <div class="popup-header">
+      <div class="popup-logo">
+        <div class="popup-logo-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Chat Queue</h1>
+          <span class="popup-subtitle">for Perplexity AI</span>
+        </div>
+      </div>
+      <div id="popup-connection" class="connection-badge disconnected">
+        <span class="connection-dot"></span>
+        <span id="connection-text">Disconnected</span>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="popup-status-card" id="status-card">
+      <div class="status-main">
+        <div class="status-indicator" id="status-indicator"></div>
+        <div class="status-info">
+          <span class="status-label" id="status-label">Status</span>
+          <span class="status-detail" id="status-detail">Open Perplexity AI to start</span>
+        </div>
+      </div>
+      <div class="status-progress" id="status-progress"></div>
+    </div>
+
+    <!-- Unified Input -->
+    <div class="section">
+      <div class="section-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Add Prompts
+      </div>
+      <div class="input-area">
+        <textarea id="prompt-input" placeholder="Each line = 1 separate prompt.&#10;Blank lines will be skipped.&#10;Use \\n for newline within a prompt." rows="5"></textarea>
+        <div class="input-footer">
+          <label class="checkbox-label" id="single-prompt-label">
+            <input type="checkbox" id="single-prompt-check">
+            <span class="checkmark"></span>
+            <span>This is a single prompt</span>
+          </label>
+          <button id="add-btn" class="btn btn-primary btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Queue List -->
+    <div class="section">
+      <div class="section-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+          <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+        </svg>
+        Queue
+        <span class="badge" id="queue-count">0</span>
+      </div>
+      <div class="queue-list" id="queue-list">
+        <div class="empty-state">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.3">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span>No messages yet</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="popup-actions">
+      <button id="start-btn" class="btn btn-primary" disabled>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        Start
+      </button>
+      <button id="pause-btn" class="btn btn-warning hidden">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+        </svg>
+        Pause
+      </button>
+      <button id="resume-btn" class="btn btn-success hidden">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        Resume
+      </button>
+      <button id="stop-btn" class="btn btn-danger hidden">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+        </svg>
+        Stop
+      </button>
+      <button id="clear-btn" class="btn btn-ghost">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+        </svg>
+        Clear All
+      </button>
+      <button id="save-btn" class="btn btn-ghost" title="Save current queue">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+        </svg>
+        Save
+      </button>
+    </div>
+
+    <!-- Presets Section -->
+    <div class="section presets-section">
+      <div class="section-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+        </svg>
+        Saved Presets
+        <div class="section-actions">
+          <button id="import-btn" class="icon-btn-sm" title="Import JSON">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+          </button>
+          <button id="export-btn" class="icon-btn-sm" title="Export JSON">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+          </button>
+          <button id="add-folder-btn" class="icon-btn-sm" title="Add folder">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="presets-search">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" id="preset-search" placeholder="Search presets...">
+      </div>
+      <div class="presets-tree" id="presets-tree">
+        <div class="empty-state empty-state-sm">
+          <span>No presets yet</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="popup-footer">
+      <div class="delay-row">
+        <label>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+          Delay:
+        </label>
+        <input type="number" id="delay-input" value="3" min="1" max="60" step="1">
+        <span>seconds</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Save Preset Modal -->
+  <div id="save-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Save Queue</h3>
+        <button class="modal-close" id="save-modal-close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Preset name</label>
+          <input type="text" id="save-name" placeholder="e.g. Keyword Research">
+        </div>
+        <div class="form-group">
+          <label>Folder</label>
+          <select id="save-folder">
+            <option value="__new__">+ Create new folder...</option>
+          </select>
+        </div>
+        <div class="form-group hidden" id="new-folder-group">
+          <label>New folder name</label>
+          <input type="text" id="new-folder-name" placeholder="e.g. SEO">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost btn-sm" id="save-cancel">Cancel</button>
+        <button class="btn btn-primary btn-sm" id="save-confirm">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load Confirm Modal -->
+  <div id="load-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Load Preset</h3>
+        <button class="modal-close" id="load-modal-close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="load-modal-text">What do you want to do with the current queue?</p>
+      </div>
+      <div class="modal-footer modal-footer-3">
+        <button class="btn btn-ghost btn-sm" id="load-cancel">Cancel</button>
+        <button class="btn btn-warning btn-sm" id="load-replace">Replace</button>
+        <button class="btn btn-primary btn-sm" id="load-append">Append</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden file input for import -->
+  <input type="file" id="import-file" accept=".json" class="hidden">
+
+  <script src="popup.js"></script>
+</body>
+</html>

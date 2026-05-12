@@ -1,0 +1,529 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Perplexity Chat Queue – Floating Panel Styles
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ── Panel Container ──────────────────────────────────────────────────── */
+#pcq-floating-panel {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  width: 380px;
+  max-height: 720px;
+  z-index: 99999;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  color: #e4e4e7;
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(145deg, rgba(24, 24, 32, 0.97), rgba(16, 16, 24, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.3),
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+#pcq-floating-panel.pcq-collapsed {
+  max-height: 44px;
+}
+
+#pcq-floating-panel.pcq-collapsed .pcq-body {
+  display: none;
+}
+
+/* ── Header ───────────────────────────────────────────────────────────── */
+.pcq-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  cursor: grab;
+  user-select: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, transparent 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.pcq-header:active {
+  cursor: grabbing;
+}
+
+.pcq-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: #a5b4fc;
+}
+
+.pcq-logo svg {
+  opacity: 0.9;
+}
+
+.pcq-header-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.pcq-icon-btn {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #71717a;
+  transition: all 0.15s ease;
+}
+
+.pcq-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #e4e4e7;
+}
+
+/* ── Body ─────────────────────────────────────────────────────────────── */
+.pcq-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+
+/* ── Status Bar ───────────────────────────────────────────────────────── */
+.pcq-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.pcq-status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.pcq-status-idle {
+  background: #52525b;
+  box-shadow: 0 0 0 2px rgba(82, 82, 91, 0.3);
+}
+
+.pcq-status-active {
+  background: #22c55e;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.4), 0 0 0 2px rgba(34, 197, 94, 0.2);
+  animation: pcq-pulse 2s ease-in-out infinite;
+}
+
+.pcq-status-paused {
+  background: #f59e0b;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.4), 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
+
+@keyframes pcq-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+#pcq-status-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: #a1a1aa;
+}
+
+.pcq-progress-text {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 600;
+  color: #a5b4fc;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Queue List ───────────────────────────────────────────────────────── */
+.pcq-queue-list {
+  max-height: 280px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.pcq-queue-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.pcq-queue-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.pcq-queue-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.pcq-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px;
+  color: #52525b;
+  font-size: 12px;
+  text-align: center;
+}
+
+.pcq-queue-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: all 0.2s ease;
+  min-height: 36px;
+}
+.pcq-queue-item.pcq-dragging { opacity: 0.5; background: rgba(165,180,252,0.08); }
+.pcq-queue-item.pcq-drag-over { border-top: 2px solid #a5b4fc; }
+
+.pcq-item-drag {
+  cursor: grab; color: #3f3f46; flex-shrink: 0; display: flex;
+  align-items: center; transition: color 0.15s;
+}
+.pcq-item-drag:hover { color: #a5b4fc; }
+.pcq-item-drag:active { cursor: grabbing; }
+
+.pcq-item-actions { display: flex; gap: 2px; opacity: 0; transition: opacity 0.15s; flex-shrink: 0; }
+.pcq-queue-item:hover .pcq-item-actions { opacity: 1; }
+
+.pcq-item-btn {
+  all: unset; display: flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; border-radius: 5px; cursor: pointer;
+  color: #52525b; transition: all 0.15s ease;
+}
+.pcq-item-btn:hover { background: rgba(255,255,255,0.08); color: #a1a1aa; }
+.pcq-item-remove:hover { background: rgba(239,68,68,0.15) !important; color: #ef4444 !important; }
+.pcq-item-dup:hover { background: rgba(34,197,94,0.15) !important; color: #22c55e !important; }
+
+.pcq-queue-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.pcq-item-index {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.06);
+  color: #71717a;
+}
+
+.pcq-item-done .pcq-item-index {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.pcq-item-current .pcq-item-index {
+  background: rgba(165, 180, 252, 0.15);
+  color: #a5b4fc;
+  animation: pcq-pulse 1.5s ease-in-out infinite;
+}
+
+.pcq-item-current {
+  background: rgba(165, 180, 252, 0.06) !important;
+  border-color: rgba(165, 180, 252, 0.15) !important;
+}
+
+.pcq-item-done {
+  opacity: 0.5;
+}
+
+.pcq-item-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: #d4d4d8;
+  line-height: 1.4;
+}
+
+.pcq-item-remove {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #52525b;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+  opacity: 0;
+}
+
+.pcq-queue-item:hover .pcq-item-remove {
+  opacity: 1;
+}
+
+.pcq-item-remove:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+/* ── Input Area ───────────────────────────────────────────────────────── */
+.pcq-input-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pcq-input-area textarea {
+  width: 100%;
+  resize: none;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #e4e4e7;
+  background: rgba(255, 255, 255, 0.04);
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.pcq-input-area textarea:focus {
+  border-color: rgba(165, 180, 252, 0.3);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px rgba(165, 180, 252, 0.08);
+}
+
+.pcq-input-area textarea::placeholder {
+  color: #52525b;
+  font-size: 11px;
+}
+
+.pcq-input-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── Checkbox ─── */
+.pcq-checkbox-label {
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  font-size: 11px; color: #a1a1aa; user-select: none;
+}
+.pcq-checkbox-label input { display: none; }
+.pcq-checkmark {
+  width: 16px; height: 16px; border-radius: 4px;
+  border: 1.5px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.04);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s ease; flex-shrink: 0;
+}
+.pcq-checkmark::after {
+  content: ''; width: 8px; height: 5px;
+  border-left: 2px solid white; border-bottom: 2px solid white;
+  transform: rotate(-45deg) translateY(-1px); opacity: 0; transition: opacity 0.15s;
+}
+.pcq-checkbox-label input:checked ~ .pcq-checkmark {
+  background: linear-gradient(135deg, #6366f1, #818cf8); border-color: #6366f1;
+}
+.pcq-checkbox-label input:checked ~ .pcq-checkmark::after { opacity: 1; }
+.pcq-checkbox-label:hover .pcq-checkmark { border-color: rgba(165,180,252,0.4); }
+
+/* ── Buttons ──────────────────────────────────────────────────────────── */
+.pcq-btn {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.pcq-btn-sm { padding: 5px 12px; font-size: 11px; }
+
+.pcq-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pcq-btn-add {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6366f1, #818cf8);
+  color: white;
+  flex-shrink: 0;
+}
+
+.pcq-btn-add:hover:not(:disabled) {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  transform: scale(1.05);
+}
+
+.pcq-btn-primary {
+  background: linear-gradient(135deg, #6366f1, #818cf8);
+  color: white;
+}
+
+.pcq-btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.pcq-btn-warning {
+  background: linear-gradient(135deg, #d97706, #f59e0b);
+  color: white;
+}
+
+.pcq-btn-warning:hover:not(:disabled) {
+  background: linear-gradient(135deg, #b45309, #d97706);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.pcq-btn-success {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: white;
+}
+
+.pcq-btn-success:hover:not(:disabled) {
+  background: linear-gradient(135deg, #15803d, #16a34a);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.pcq-btn-danger {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  color: white;
+}
+
+.pcq-btn-danger:hover:not(:disabled) {
+  background: linear-gradient(135deg, #b91c1c, #dc2626);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.pcq-btn-ghost {
+  background: transparent;
+  color: #71717a;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.pcq-btn-ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.05);
+  color: #a1a1aa;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.pcq-btn-text {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #71717a;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 0.15s ease;
+}
+
+.pcq-btn-text:hover {
+  color: #a5b4fc;
+}
+
+
+/* ── Actions ──────────────────────────────────────────────────────────── */
+.pcq-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* ── Delay Setting ────────────────────────────────────────────────────── */
+.pcq-delay-setting {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
+  font-size: 11px;
+  color: #71717a;
+}
+
+.pcq-delay-setting label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pcq-delay-setting input {
+  width: 48px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: #e4e4e7;
+  font-size: 12px;
+  font-family: inherit;
+  text-align: center;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.pcq-delay-setting input:focus {
+  border-color: rgba(165, 180, 252, 0.3);
+  box-shadow: 0 0 0 3px rgba(165, 180, 252, 0.08);
+}
+
+/* ── Utilities ────────────────────────────────────────────────────────── */
+.pcq-hidden {
+  display: none !important;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  #pcq-floating-panel {
+    width: 320px;
+    right: 10px;
+    bottom: 80px;
+  }
+}
