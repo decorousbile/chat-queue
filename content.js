@@ -73,7 +73,8 @@
     if (queue.length === 0) return;
     isProcessing = true;
     isPaused = false;
-    currentIndex = 0;
+    // keep currentIndex if user set a start point, otherwise start from 0
+    if (currentIndex >= queue.length) currentIndex = 0;
     updateFloatingUI();
     sendNext();
   }
@@ -658,7 +659,7 @@
       btn.addEventListener('click', () => { const i = parseInt(btn.dataset.dup); queue.splice(i + 1, 0, queue[i]); updateFloatingUI(); notifyPopup(); });
     });
     listEl.querySelectorAll('.pcq-item-setstart').forEach(btn => {
-      btn.addEventListener('click', () => { currentIndex = parseInt(btn.dataset.setstart); updateFloatingUI(); notifyPopup(); });
+      btn.addEventListener('click', () => { currentIndex = parseInt(btn.dataset.setstart); startProcessing(); });
     });
 
     // Drag reorder
