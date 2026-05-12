@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy – Perplexity Chat Queue</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.7; color: #1a1a2e; background: #f8f9fc;
+      padding: 0; margin: 0;
+    }
+    header {
+      background: linear-gradient(135deg, #1e1e2e, #2d2b55);
+      color: #fff; padding: 48px 24px; text-align: center;
+    }
+    header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    header p { font-size: 14px; color: rgba(255,255,255,0.7); }
+    .container {
+      max-width: 720px; margin: -32px auto 48px; padding: 40px 36px;
+      background: #fff; border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+    h2 {
+      font-size: 20px; font-weight: 700; color: #1e1e2e;
+      margin-top: 32px; margin-bottom: 12px;
+      padding-bottom: 8px; border-bottom: 2px solid #ececf1;
+    }
+    h2:first-of-type { margin-top: 0; }
+    p, li { font-size: 15px; color: #3c3c50; margin-bottom: 10px; }
+    ul { padding-left: 24px; margin-bottom: 16px; }
+    li { margin-bottom: 6px; }
+    strong { color: #1e1e2e; }
+    a { color: #6366f1; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .highlight-box {
+      background: #f0f0ff; border-left: 4px solid #6366f1;
+      padding: 14px 18px; border-radius: 6px; margin: 16px 0;
+      font-size: 14px; color: #3c3c50;
+    }
+    .highlight-box strong { color: #4f46e5; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    th, td { text-align: left; padding: 10px 14px; font-size: 14px; border-bottom: 1px solid #ececf1; }
+    th { background: #f8f9fc; font-weight: 600; color: #1e1e2e; }
+    td { color: #3c3c50; }
+    footer {
+      text-align: center; padding: 24px; font-size: 13px; color: #9ca3af;
+    }
+    footer a { color: #6366f1; }
+    @media (max-width: 600px) {
+      .container { margin: -16px 12px 32px; padding: 24px 20px; }
+      header { padding: 32px 16px; }
+      header h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Privacy Policy</h1>
+  <p>Perplexity Chat Queue – Chrome Extension</p>
+</header>
+
+<div class="container">
+
+  <h2>1. Introduction</h2>
+  <p>This Privacy Policy describes how the <strong>Perplexity Chat Queue</strong> Chrome extension ("the Extension", "we", "our") handles user data. We are committed to protecting your privacy and being transparent about our data practices.</p>
+
+  <div class="highlight-box">
+    <strong>Summary:</strong> This extension does <strong>not collect, transmit, or share any personal data</strong>. All data is stored locally on your device and never leaves your browser.
+  </div>
+
+  <h2>2. Data Collection</h2>
+  <p>The Extension does <strong>not</strong> collect any of the following:</p>
+  <ul>
+    <li>Personally identifiable information (PII)</li>
+    <li>Browsing history or web activity</li>
+    <li>Authentication credentials or tokens</li>
+    <li>Financial or payment information</li>
+    <li>Health information</li>
+    <li>Communication content</li>
+    <li>Location data</li>
+    <li>Any other personal or sensitive user data</li>
+  </ul>
+
+  <h2>3. Data Stored Locally</h2>
+  <p>The Extension stores the following data <strong>locally on your device only</strong> using the Chrome <code>chrome.storage.local</code> API:</p>
+
+  <table>
+    <thead>
+      <tr><th>Data</th><th>Purpose</th><th>Storage</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Saved Presets</td><td>To let you save, organize, and reload prompt queues</td><td>Local only (<code>chrome.storage.local</code>)</td></tr>
+      <tr><td>Queue Messages</td><td>Prompt messages you enter in the queue during a session</td><td>In-memory (cleared on page reload)</td></tr>
+      <tr><td>Settings (delay value)</td><td>Your preferred delay between messages</td><td>In-memory (cleared on page reload)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="highlight-box">
+    <strong>Important:</strong> None of this data is ever transmitted to any external server, third-party service, or analytics platform. It remains entirely on your local machine.
+  </div>
+
+  <h2>4. Data Sharing</h2>
+  <p>We do <strong>not</strong> share, sell, rent, or transfer any user data to third parties. Specifically:</p>
+  <ul>
+    <li>No data is sent to our servers (we do not operate any servers)</li>
+    <li>No data is shared with advertisers or marketing platforms</li>
+    <li>No data is shared with analytics or tracking services</li>
+    <li>No data is shared with any other third party for any reason</li>
+  </ul>
+
+  <h2>5. Permissions Used</h2>
+  <p>The Extension requests the following browser permissions. Each is used solely for the stated purpose:</p>
+  <table>
+    <thead>
+      <tr><th>Permission</th><th>Why It's Needed</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>activeTab</code></td><td>To interact with the Perplexity AI page and inject prompts into the chat input field</td></tr>
+      <tr><td><code>storage</code></td><td>To save your prompt presets locally on your device</td></tr>
+      <tr><td><code>notifications</code></td><td>To display a desktop notification when queue processing is complete</td></tr>
+      <tr><td><code>host_permissions</code> for <code>perplexity.ai</code></td><td>To run the content script on the Perplexity AI website only</td></tr>
+    </tbody>
+  </table>
+
+  <h2>6. Data Retention and Deletion</h2>
+  <p>Since all data is stored locally:</p>
+  <ul>
+    <li><strong>Presets</strong> are retained until you manually delete them within the Extension or uninstall the Extension.</li>
+    <li><strong>Queue messages and settings</strong> are stored in memory only and are automatically cleared when you close or refresh the Perplexity AI tab.</li>
+    <li><strong>Uninstalling</strong> the Extension will permanently remove all locally stored data including saved presets.</li>
+  </ul>
+  <p>You can delete individual presets or entire folders at any time from within the Extension's Presets panel. You can also export your presets as a JSON file before deletion if you wish to keep a backup.</p>
+
+  <h2>7. Security</h2>
+  <p>We implement the following measures to protect your data:</p>
+  <ul>
+    <li>All data stays on your local machine — no network transmission occurs</li>
+    <li>The Extension only operates on <code>perplexity.ai</code> domains</li>
+    <li>The Extension does not inject scripts on any other website</li>
+    <li>The Extension's source code is open source and publicly auditable on <a href="https://github.com/decorousbile/chat-queue" target="_blank">GitHub</a></li>
+  </ul>
+
+  <h2>8. Children's Privacy</h2>
+  <p>The Extension is not directed at children under the age of 13. We do not knowingly collect any personal information from children. Since the Extension does not collect any personal data from any user, no special provisions for children are necessary.</p>
+
+  <h2>9. Third-Party Services</h2>
+  <p>The Extension interacts with <strong>Perplexity AI</strong> (<a href="https://www.perplexity.ai" target="_blank">perplexity.ai</a>) by automating the submission of prompts that you provide. The Extension does not access, read, or store any responses from Perplexity AI. Your interaction with Perplexity AI is governed by <a href="https://www.perplexity.ai/privacy" target="_blank">Perplexity AI's own Privacy Policy</a>.</p>
+
+  <h2>10. Changes to This Policy</h2>
+  <p>We may update this Privacy Policy from time to time. Any changes will be reflected on this page with an updated "Last Updated" date. We encourage you to review this page periodically. Continued use of the Extension after changes constitutes acceptance of the updated policy.</p>
+
+  <h2>11. Contact</h2>
+  <p>If you have any questions, concerns, or requests regarding this Privacy Policy or the Extension's data practices, you can reach us at:</p>
+  <ul>
+    <li><strong>Email:</strong> <a href="mailto:maiphuongtun@gmail.com">maiphuongtun@gmail.com</a></li>
+    <li><strong>GitHub:</strong> <a href="https://github.com/decorousbile/chat-queue/issues" target="_blank">Open an Issue</a></li>
+  </ul>
+
+  <p style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #ececf1; font-size: 13px; color: #9ca3af;">
+    <strong>Last Updated:</strong> May 12, 2025
+  </p>
+
+</div>
+
+<footer>
+  <p><a href="https://github.com/decorousbile/chat-queue">Perplexity Chat Queue</a> · Open Source Chrome Extension</p>
+</footer>
+
+</body>
+</html>
