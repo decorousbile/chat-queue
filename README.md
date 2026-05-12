@@ -65,7 +65,7 @@ Whether you're doing deep research, SEO keyword analysis, or bulk content genera
 ### UI
 | Feature | Description |
 |---|---|
-| 🖥️ **Popup Interface** | Full-featured popup with all controls and preset management |
+| 🔗 **Icon → GitHub** | Click the extension icon to visit the GitHub repo |
 | 🪟 **Floating Panel** | Draggable in-page panel on Perplexity with live queue status |
 | 🎨 **Dark Theme** | Premium dark glassmorphism design that matches Perplexity's aesthetic |
 | 📌 **Collapsible Panel** | Minimize the floating panel when not needed |
@@ -95,7 +95,7 @@ Whether you're doing deep research, SEO keyword analysis, or bulk content genera
 
 ### Quick Start
 
-1. **Click the extension icon** to open the popup, or use the **floating panel** on Perplexity
+1. Open [Perplexity AI](https://www.perplexity.ai) — the floating **Chat Queue** panel appears
 2. **Type your prompts** in the textarea:
    - **Bulk mode** (default): each line = one separate prompt
    - **Single mode**: check ☑️ *"This is a single prompt"* to send everything as one prompt
