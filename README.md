@@ -1,4 +1,4 @@
-<![CDATA[<div align="center">
+<div align="center">
 
 # ⚡ Perplexity Chat Queue
 
@@ -190,4 +190,4 @@ Made with ❤️ for the Perplexity AI community
 **⭐ Star this repo if you find it useful!**
 
 </div>
-]]>
+
