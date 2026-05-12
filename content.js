@@ -426,7 +426,7 @@
             <option value="Nemotron 3 Super">Nemotron 3 Super</option>
           </select>
         </div>
-        <div style="font-size: 11px; opacity: 0.7; margin: -4px 0 8px 24px;">* Lưu ý: Chọn model chỉ áp dụng từ prompt thứ 2</div>
+        <div style="font-size: 11px; opacity: 0.7; margin: -4px 0 8px 24px;">* Note: Model selection only applies from the 2nd prompt</div>
         <div class="pcq-presets-section">
           <div class="pcq-presets-header">
             <button id="pcq-presets-toggle" class="pcq-presets-toggle-btn">
