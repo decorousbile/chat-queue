@@ -596,8 +596,13 @@
       progressText.textContent = `${currentIndex + 1}/${queue.length}`;
     } else {
       statusDot.className = 'pcq-status-indicator pcq-status-idle';
-      statusText.textContent = queue.length > 0 ? `${queue.length} messages queued` : 'Ready';
-      progressText.textContent = '';
+      if (queue.length > 0) {
+        statusText.textContent = `${queue.length} messages queued`;
+        progressText.textContent = currentIndex > 0 ? `Start from #${currentIndex + 1}` : '';
+      } else {
+        statusText.textContent = 'Ready';
+        progressText.textContent = '';
+      }
     }
 
     // Update buttons
@@ -627,7 +632,10 @@
         if (i < currentIndex) { stateClass = 'pcq-item-done'; stateLabel = '✓'; }
         else if (i === currentIndex) { stateClass = 'pcq-item-current'; stateLabel = '►'; }
         else { stateClass = 'pcq-item-pending'; stateLabel = (i + 1).toString(); }
-      } else { stateLabel = (i + 1).toString(); }
+      } else {
+        stateLabel = (i + 1).toString();
+        if (i === currentIndex && currentIndex > 0) stateClass = 'pcq-item-startpoint';
+      }
       const preview = msg.length > 80 ? msg.substring(0, 80) + '…' : msg;
       const escapedPreview = preview.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, ' ↵ ');
       return `<div class="pcq-queue-item ${stateClass}" draggable="${!isProcessing}" data-index="${i}">
@@ -635,18 +643,22 @@
         <div class="pcq-item-index">${stateLabel}</div>
         <div class="pcq-item-text" title="${msg.replace(/"/g, '&quot;').replace(/\n/g, '↵')}">${escapedPreview}</div>
         ${!isProcessing ? `<div class="pcq-item-actions">
+          <button class="pcq-item-btn pcq-item-setstart ${i === currentIndex ? 'pcq-active-start' : ''}" data-setstart="${i}" title="${i === currentIndex ? 'Start point' : 'Start from here'}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
           <button class="pcq-item-btn pcq-item-dup" data-dup="${i}" title="Duplicate"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
           <button class="pcq-item-btn pcq-item-remove" data-remove="${i}" title="Remove"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>` : ''}
       </div>`;
     }).join('');
 
-    // Bind remove & duplicate
+    // Bind remove, duplicate & set-start
     listEl.querySelectorAll('.pcq-item-remove').forEach(btn => {
-      btn.addEventListener('click', () => { queue.splice(parseInt(btn.dataset.remove), 1); updateFloatingUI(); notifyPopup(); });
+      btn.addEventListener('click', () => { queue.splice(parseInt(btn.dataset.remove), 1); if (currentIndex >= queue.length) currentIndex = 0; updateFloatingUI(); notifyPopup(); });
     });
     listEl.querySelectorAll('.pcq-item-dup').forEach(btn => {
       btn.addEventListener('click', () => { const i = parseInt(btn.dataset.dup); queue.splice(i + 1, 0, queue[i]); updateFloatingUI(); notifyPopup(); });
+    });
+    listEl.querySelectorAll('.pcq-item-setstart').forEach(btn => {
+      btn.addEventListener('click', () => { currentIndex = parseInt(btn.dataset.setstart); updateFloatingUI(); notifyPopup(); });
     });
 
     // Drag reorder

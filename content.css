@@ -224,6 +224,16 @@
 .pcq-item-btn:hover { background: rgba(255,255,255,0.08); color: #a1a1aa; }
 .pcq-item-remove:hover { background: rgba(239,68,68,0.15) !important; color: #ef4444 !important; }
 .pcq-item-dup:hover { background: rgba(34,197,94,0.15) !important; color: #22c55e !important; }
+.pcq-item-setstart { opacity: 0.4; }
+.pcq-item-setstart:hover { background: rgba(99,102,241,0.15) !important; color: #818cf8 !important; opacity: 1; }
+.pcq-active-start { opacity: 1 !important; color: #6366f1 !important; }
+.pcq-item-startpoint {
+  border-left: 2px solid #6366f1 !important;
+  background: rgba(99,102,241,0.06) !important;
+}
+.pcq-item-startpoint .pcq-item-index {
+  color: #a5b4fc !important; font-weight: 600;
+}
 
 .pcq-queue-item:hover {
   background: rgba(255, 255, 255, 0.05);
