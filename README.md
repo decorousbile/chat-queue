@@ -78,7 +78,7 @@ Whether you're doing deep research, SEO keyword analysis, or bulk content genera
 
 1. **Clone or download** this repository:
    ```bash
-   git clone https://github.com/decorousbile/perplexity-chat-queue.git
+   git clone https://github.com/decorousbile/chat-queue.git
    ```
 
 2. Open **Chrome** and go to `chrome://extensions`
@@ -151,7 +151,7 @@ chat-queue/
 
 Contributions are welcome! Feel free to:
 
-- 🐛 Report bugs via [Issues](https://github.com/decorousbile/perplexity-chat-queue/issues)
+- 🐛 Report bugs via [Issues](https://github.com/decorousbile/chat-queue/issues)
 - 💡 Suggest features
 - 🔧 Submit pull requests
 

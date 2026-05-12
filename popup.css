@@ -318,5 +318,31 @@ body {
 .form-group select { appearance: none; cursor: pointer; }
 .form-group select option { background: #1e1e2e; color: #e4e4e7; }
 
+/* ── Footer Links ─── */
+.footer-links {
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  margin-top: 10px; padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+.footer-link {
+  all: unset; display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 500; cursor: pointer;
+  transition: all 0.2s ease; text-decoration: none;
+}
+.donate-link {
+  color: #f59e0b;
+}
+.donate-link:hover {
+  color: #fbbf24; text-shadow: 0 0 8px rgba(245,158,11,0.3);
+}
+.donate-link svg { stroke: currentColor; }
+.github-link {
+  color: #71717a;
+}
+.github-link:hover {
+  color: #a1a1aa;
+}
+.github-link svg { fill: currentColor; }
+
 /* ── Utilities ─── */
 .hidden { display: none !important; }
