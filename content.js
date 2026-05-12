@@ -24,6 +24,13 @@
     return document.querySelector('button[aria-label="Submit"]');
   }
 
+  function simulateClick(element) {
+    if (!element) return;
+    ['pointerdown', 'mousedown', 'pointerup', 'mouseup', 'click'].forEach(type => {
+      element.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, view: window }));
+    });
+  }
+
   function getStopButton() {
     return document.querySelector('button[aria-label="Stop response (Esc)"]');
   }
@@ -63,7 +70,7 @@
   function clickSubmit() {
     const btn = getSubmitButton();
     if (btn && !btn.disabled) {
-      btn.click();
+      simulateClick(btn);
       return true;
     }
     return false;
@@ -73,14 +80,17 @@
   const KNOWN_MODELS = ['Best', 'Sonar 2', 'GPT-5.4', 'GPT-5.5', 'Gemini 3.1 Pro', 'Claude Sonnet 4.6', 'Claude Opus 4.7', 'Kimi K2.6', 'Nemotron 3 Super'];
 
   function switchModel(modelName, callback) {
-    // The model trigger button has aria-label set to the current model name
-    let triggerBtn = null;
-    const buttons = document.querySelectorAll('button[aria-haspopup="menu"]');
-    for (const btn of buttons) {
-      const label = (btn.getAttribute('aria-label') || '').trim();
-      if (KNOWN_MODELS.includes(label)) {
-        triggerBtn = btn;
-        break;
+    // Find the model trigger button
+    let triggerBtn = document.querySelector('button[aria-label="Model"]');
+    
+    if (!triggerBtn) {
+      const buttons = document.querySelectorAll('button[aria-haspopup="menu"]');
+      for (const btn of buttons) {
+        const label = (btn.getAttribute('aria-label') || '').trim();
+        if (KNOWN_MODELS.includes(label)) {
+          triggerBtn = btn;
+          break;
+        }
       }
     }
     if (!triggerBtn) {
@@ -90,13 +100,16 @@
     }
 
     // Already the right model? Skip
-    if (triggerBtn.getAttribute('aria-label').trim() === modelName) {
+    const currentLabel = (triggerBtn.getAttribute('aria-label') || '').trim();
+    // If the label is just "Model", we can't be sure it's the right model without checking the UI state,
+    // so we force open the menu. If it's the model name, we can skip.
+    if (currentLabel === modelName) {
       callback();
       return;
     }
 
-    // Click to open dropdown
-    triggerBtn.click();
+    // React/Next.js might ignore simple .click() - simulate real user interaction
+    simulateClick(triggerBtn);
 
     // Wait for dropdown menu to appear
     let menuTimeout = null;
@@ -127,7 +140,7 @@
       }
 
       if (targetItem) {
-        targetItem.click();
+        simulateClick(targetItem);
         console.log('[ChatQueue] Switched model to:', modelName);
       } else {
         console.warn('[ChatQueue] Model not found in menu:', modelName);
@@ -413,6 +426,7 @@
             <option value="Nemotron 3 Super">Nemotron 3 Super</option>
           </select>
         </div>
+        <div style="font-size: 11px; opacity: 0.7; margin: -4px 0 8px 24px;">* Lưu ý: Chọn model chỉ áp dụng từ prompt thứ 2</div>
         <div class="pcq-presets-section">
           <div class="pcq-presets-header">
             <button id="pcq-presets-toggle" class="pcq-presets-toggle-btn">
