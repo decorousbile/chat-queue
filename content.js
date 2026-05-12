@@ -12,7 +12,8 @@
   let isPaused = false;
   let currentIndex = 0;
   let checkInterval = null;
-  let delayBetweenMessages = 3000; // ms delay after response completes before next msg
+  let delayBetweenMessages = 3000;
+  let selectedModel = ''; // empty = no lock
 
   // ── DOM Helpers ────────────────────────────────────────────────────────
   function getEditor() {
@@ -66,6 +67,82 @@
       return true;
     }
     return false;
+  }
+
+  // ── Model Switching ─────────────────────────────────────────────────
+  const KNOWN_MODELS = ['Best', 'Sonar 2', 'GPT-5.4', 'GPT-5.5', 'Gemini 3.1 Pro', 'Claude Sonnet 4.6', 'Claude Opus 4.7', 'Kimi K2.6', 'Nemotron 3 Super'];
+
+  function switchModel(modelName, callback) {
+    // The model trigger button has aria-label set to the current model name
+    let triggerBtn = null;
+    const buttons = document.querySelectorAll('button[aria-haspopup="menu"]');
+    for (const btn of buttons) {
+      const label = (btn.getAttribute('aria-label') || '').trim();
+      if (KNOWN_MODELS.includes(label)) {
+        triggerBtn = btn;
+        break;
+      }
+    }
+    if (!triggerBtn) {
+      console.warn('[ChatQueue] Model trigger button not found, skipping');
+      callback();
+      return;
+    }
+
+    // Already the right model? Skip
+    if (triggerBtn.getAttribute('aria-label').trim() === modelName) {
+      callback();
+      return;
+    }
+
+    // Click to open dropdown
+    triggerBtn.click();
+
+    // Wait for dropdown menu to appear
+    let menuTimeout = null;
+    const waitMenu = setInterval(() => {
+      const menu = document.querySelector('[role="menu"][data-state="open"]');
+      if (!menu) return;
+      clearInterval(waitMenu);
+      if (menuTimeout) clearTimeout(menuTimeout);
+
+      // Find the target model item by matching span text
+      const items = menu.querySelectorAll('[role="menuitemradio"]');
+      let targetItem = null;
+      for (const item of items) {
+        const nameEl = item.querySelector('.min-w-0 span[translate="no"], .min-w-0 > div > span');
+        if (nameEl && nameEl.textContent.trim() === modelName) {
+          targetItem = item;
+          break;
+        }
+        // Fallback: check all spans
+        const spans = item.querySelectorAll('span');
+        for (const s of spans) {
+          if (s.textContent.trim() === modelName && !s.querySelector('*')) {
+            targetItem = item;
+            break;
+          }
+        }
+        if (targetItem) break;
+      }
+
+      if (targetItem) {
+        targetItem.click();
+        console.log('[ChatQueue] Switched model to:', modelName);
+      } else {
+        console.warn('[ChatQueue] Model not found in menu:', modelName);
+        // Press Escape to close
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      }
+
+      setTimeout(callback, 300);
+    }, 100);
+
+    // Timeout: if menu doesn't appear in 3s, proceed anyway
+    menuTimeout = setTimeout(() => {
+      clearInterval(waitMenu);
+      callback();
+    }, 3000);
   }
 
   // ── Queue Processing ──────────────────────────────────────────────────
@@ -137,37 +214,46 @@
         return;
       }
 
-      // Small delay to let Lexical process, then submit
-      setTimeout(() => {
-        if (!isProcessing || isPaused) return;
-
-        // Wait for submit button to be ready
-        waitForSubmitReady(() => {
+      // Switch model before submitting (if locked)
+      const afterModelSwitch = () => {
+        // Small delay to let Lexical process, then submit
+        setTimeout(() => {
           if (!isProcessing || isPaused) return;
 
-          const submitted = clickSubmit();
-          if (!submitted) {
-            console.error('[ChatQueue] Failed to click submit');
-            stopProcessing();
-            return;
-          }
+          // Wait for submit button to be ready
+          waitForSubmitReady(() => {
+            if (!isProcessing || isPaused) return;
 
-          // Wait for response to start, then wait for it to finish
-          setTimeout(() => {
-            waitForResponseComplete(() => {
-              if (!isProcessing || isPaused) return;
-              currentIndex++;
-              updateFloatingUI();
-              notifyPopup();
+            const submitted = clickSubmit();
+            if (!submitted) {
+              console.error('[ChatQueue] Failed to click submit');
+              stopProcessing();
+              return;
+            }
 
-              // Delay before next message
-              setTimeout(() => {
-                sendNext();
-              }, delayBetweenMessages);
-            });
-          }, 1000); // wait 1s for response to start
-        });
-      }, 500);
+            // Wait for response to start, then wait for it to finish
+            setTimeout(() => {
+              waitForResponseComplete(() => {
+                if (!isProcessing || isPaused) return;
+                currentIndex++;
+                updateFloatingUI();
+                notifyPopup();
+
+                // Delay before next message
+                setTimeout(() => {
+                  sendNext();
+                }, delayBetweenMessages);
+              });
+            }, 1000);
+          });
+        }, 500);
+      };
+
+      if (selectedModel) {
+        switchModel(selectedModel, afterModelSwitch);
+      } else {
+        afterModelSwitch();
+      }
     });
   }
 
@@ -309,6 +395,24 @@
           <input type="number" id="pcq-delay" value="3" min="1" max="60" step="1">
           <span>sec</span>
         </div>
+        <div class="pcq-model-setting">
+          <label>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/>
+            </svg>
+            Model:
+          </label>
+          <select id="pcq-model">
+            <option value="">Auto (no lock)</option>
+            <option value="Best">Best</option>
+            <option value="Sonar 2">Sonar 2</option>
+            <option value="GPT-5.4">GPT-5.4</option>
+            <option value="Gemini 3.1 Pro">Gemini 3.1 Pro</option>
+            <option value="Claude Sonnet 4.6">Claude Sonnet 4.6</option>
+            <option value="Kimi K2.6">Kimi K2.6</option>
+            <option value="Nemotron 3 Super">Nemotron 3 Super</option>
+          </select>
+        </div>
         <div class="pcq-presets-section">
           <div class="pcq-presets-header">
             <button id="pcq-presets-toggle" class="pcq-presets-toggle-btn">
@@ -429,6 +533,11 @@
     // Delay setting
     document.getElementById('pcq-delay').addEventListener('change', (e) => {
       delayBetweenMessages = Math.max(1, parseInt(e.target.value) || 3) * 1000;
+    });
+
+    // Model lock
+    document.getElementById('pcq-model').addEventListener('change', (e) => {
+      selectedModel = e.target.value;
     });
 
     // ── Presets ──

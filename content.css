@@ -524,6 +524,31 @@
   box-shadow: 0 0 0 3px rgba(165, 180, 252, 0.08);
 }
 
+/* ── Model Setting ───────────────────────────────────────────────────── */
+.pcq-model-setting {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #71717a;
+}
+.pcq-model-setting label {
+  display: flex; align-items: center; gap: 4px;
+  font-weight: 500; white-space: nowrap; flex-shrink: 0;
+}
+.pcq-model-setting select {
+  flex: 1; min-width: 0;
+  padding: 4px 6px; border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04);
+  color: #e4e4e7; font-size: 11px; font-family: inherit;
+  outline: none; cursor: pointer; appearance: none;
+  transition: all 0.2s;
+}
+.pcq-model-setting select:focus {
+  border-color: rgba(165,180,252,0.3); box-shadow: 0 0 0 3px rgba(165,180,252,0.08);
+}
+.pcq-model-setting select option { background: #1e1e2e; color: #e4e4e7; }
+
 /* ── Presets Section ─── */
 .pcq-presets-section { border-top: 1px solid rgba(255,255,255,0.04); padding-top: 8px; margin-top: 4px; }
 .pcq-presets-header { display: flex; align-items: center; justify-content: space-between; }
