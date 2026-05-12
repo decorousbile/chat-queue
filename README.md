@@ -165,11 +165,11 @@ If Chat Queue saves you time and makes your workflow easier, consider buying me 
 
 ### 💛 Donate via PayPal
 
-<a href="https://www.paypal.com/paypalme/maiphuongtun">
+<a href="https://www.paypal.com/paypalme/lanmtp">
   <img src="https://img.shields.io/badge/PayPal-Donate_from_$1-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="Donate with PayPal" />
 </a>
 
-**PayPal:** [maiphuongtun@gmail.com](https://paypal.me/maiphuongtun)
+**PayPal:** [lanmtp](https://paypal.me/lanmtp)
 
 *Donations start from just **$1** — every bit counts! 🙏*
 

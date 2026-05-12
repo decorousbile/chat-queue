@@ -332,7 +332,7 @@
           </div>
         </div>
         <div class="pcq-footer-links">
-          <a href="https://www.paypal.com/paypalme/maiphuongtun" target="_blank" class="pcq-footer-link pcq-donate-link" title="Support from $1">
+          <a href="https://www.paypal.com/paypalme/lanmtp" target="_blank" class="pcq-footer-link pcq-donate-link" title="Support from $1">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             Donate from $1
           </a>
