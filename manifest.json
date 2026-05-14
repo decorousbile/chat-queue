@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Perplexity Chat Queue",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Queue multiple messages to send sequentially on Perplexity AI",
   "permissions": ["activeTab", "storage", "notifications"],
   "host_permissions": ["https://www.perplexity.ai/*"],
