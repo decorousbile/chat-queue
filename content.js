@@ -479,6 +479,15 @@
           <div class="pcq-modal-footer"><button class="pcq-btn pcq-btn-ghost pcq-btn-sm" id="pcq-load-cancel">Cancel</button><button class="pcq-btn pcq-btn-warning pcq-btn-sm" id="pcq-load-replace">Replace</button><button class="pcq-btn pcq-btn-primary pcq-btn-sm" id="pcq-load-append">Append</button></div>
         </div>
       </div>
+      <div id="pcq-edit-modal" class="pcq-modal-overlay pcq-hidden">
+        <div class="pcq-modal">
+          <div class="pcq-modal-header"><span>Edit Preset</span><button id="pcq-edit-modal-close" class="pcq-modal-close">&times;</button></div>
+          <div class="pcq-modal-body">
+            <div class="pcq-form-group"><label>Preset messages (one per line)</label><textarea id="pcq-edit-textarea" rows="8" style="width:100%;resize:vertical;"></textarea></div>
+          </div>
+          <div class="pcq-modal-footer"><button class="pcq-btn pcq-btn-ghost pcq-btn-sm" id="pcq-edit-cancel">Cancel</button><button class="pcq-btn pcq-btn-primary pcq-btn-sm" id="pcq-edit-save">Save</button></div>
+        </div>
+      </div>
       <input type="file" id="pcq-import-file" accept=".json" style="display:none">
     `;
 
@@ -556,6 +565,7 @@
 
     // ── Presets ──
     let pendingLoadMessages = null;
+    let editingPresetContext = null;
     const esc = s => s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     async function loadPresets() { const d = await chrome.storage.local.get('pcq_presets'); return d.pcq_presets || { folders: {} }; }
     async function savePresetsData(p) { await chrome.storage.local.set({ pcq_presets: p }); }
@@ -591,7 +601,7 @@
         html += `<div class="pcq-folder-item"><div class="pcq-folder-hdr" data-f="${esc(fn)}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg><span>${esc(fn)}</span><span class="pcq-folder-cnt">${pks.length}</span><div class="pcq-folder-acts"><button class="pcq-icon-btn-sm" data-rf="${esc(fn)}" title="Rename"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="pcq-icon-btn-sm" data-df="${esc(fn)}" title="Delete"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div></div><div class="pcq-folder-children">`;
         pks.forEach(pk => {
           const p = folder.presets[pk];
-          html += `<div class="pcq-preset-row" data-lf="${esc(fn)}" data-lk="${esc(pk)}"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="pcq-preset-nm">${esc(p.name)}</span><span class="pcq-preset-cnt">${p.messages.length}</span><button class="pcq-icon-btn-sm pcq-del-preset" data-dpf="${esc(fn)}" data-dpk="${esc(pk)}" title="Delete"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>`;
+          html += `<div class="pcq-preset-row" data-lf="${esc(fn)}" data-lk="${esc(pk)}"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="pcq-preset-nm">${esc(p.name)}</span><span class="pcq-preset-cnt">${p.messages.length}</span><button class="pcq-icon-btn-sm pcq-edit-preset" data-epf="${esc(fn)}" data-epk="${esc(pk)}" title="Edit"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="pcq-icon-btn-sm pcq-del-preset" data-dpf="${esc(fn)}" data-dpk="${esc(pk)}" title="Delete"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>`;
         });
         html += '</div></div>';
       });
@@ -601,8 +611,9 @@
       tree.querySelectorAll('[data-df]').forEach(b => b.addEventListener('click', async e => { e.stopPropagation(); if (!confirm(`Delete folder "${b.dataset.df}"?`)) return; const p = await loadPresets(); delete p.folders[b.dataset.df]; await savePresetsData(p); renderPresetsTree(document.getElementById('pcq-preset-search').value); }));
       tree.querySelectorAll('[data-rf]').forEach(b => b.addEventListener('click', async e => { e.stopPropagation(); const nn = prompt('New name:', b.dataset.rf); if (!nn || nn === b.dataset.rf) return; const p = await loadPresets(); p.folders[nn] = p.folders[b.dataset.rf]; delete p.folders[b.dataset.rf]; await savePresetsData(p); renderPresetsTree(document.getElementById('pcq-preset-search').value); }));
       tree.querySelectorAll('.pcq-del-preset').forEach(b => b.addEventListener('click', async e => { e.stopPropagation(); const p = await loadPresets(); delete p.folders[b.dataset.dpf].presets[b.dataset.dpk]; await savePresetsData(p); renderPresetsTree(document.getElementById('pcq-preset-search').value); }));
+      tree.querySelectorAll('.pcq-edit-preset').forEach(b => b.addEventListener('click', async e => { e.stopPropagation(); const p = await loadPresets(); const preset = p.folders[b.dataset.epf]?.presets[b.dataset.epk]; if (!preset) return; editingPresetContext = { folder: b.dataset.epf, key: b.dataset.epk }; document.getElementById('pcq-edit-textarea').value = preset.messages.join('\n'); document.getElementById('pcq-edit-modal').classList.remove('pcq-hidden'); }));
       tree.querySelectorAll('.pcq-preset-row').forEach(row => row.addEventListener('click', async e => {
-        if (e.target.closest('.pcq-del-preset')) return;
+        if (e.target.closest('.pcq-del-preset') || e.target.closest('.pcq-edit-preset')) return;
         const p = await loadPresets(); const preset = p.folders[row.dataset.lf]?.presets[row.dataset.lk];
         if (!preset) return;
         pendingLoadMessages = preset.messages;
@@ -655,6 +666,22 @@
       updateFloatingUI(); notifyPopup();
     });
     ['pcq-load-cancel', 'pcq-load-modal-close'].forEach(id => document.getElementById(id).addEventListener('click', () => { pendingLoadMessages = null; document.getElementById('pcq-load-modal').classList.add('pcq-hidden'); }));
+
+    // Edit modal
+    document.getElementById('pcq-edit-save').addEventListener('click', async () => {
+      if (!editingPresetContext) return;
+      const text = document.getElementById('pcq-edit-textarea').value;
+      const messages = text.split('\n').filter(l => l.trim() !== '');
+      const p = await loadPresets();
+      if (p.folders[editingPresetContext.folder] && p.folders[editingPresetContext.folder].presets[editingPresetContext.key]) {
+        p.folders[editingPresetContext.folder].presets[editingPresetContext.key].messages = messages;
+        await savePresetsData(p);
+        if (!document.getElementById('pcq-presets-body').classList.contains('pcq-hidden')) renderPresetsTree(document.getElementById('pcq-preset-search').value);
+      }
+      document.getElementById('pcq-edit-modal').classList.add('pcq-hidden');
+      editingPresetContext = null;
+    });
+    ['pcq-edit-cancel', 'pcq-edit-modal-close'].forEach(id => document.getElementById(id).addEventListener('click', () => { document.getElementById('pcq-edit-modal').classList.add('pcq-hidden'); editingPresetContext = null; }));
 
     // Add folder
     document.getElementById('pcq-add-folder-btn').addEventListener('click', async () => {

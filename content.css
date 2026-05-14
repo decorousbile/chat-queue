@@ -600,8 +600,8 @@
 .pcq-preset-row svg { color: #52525b; flex-shrink: 0; }
 .pcq-preset-nm { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pcq-preset-cnt { font-size: 9px; color: #52525b; }
-.pcq-del-preset { opacity: 0; transition: opacity 0.15s; }
-.pcq-preset-row:hover .pcq-del-preset { opacity: 1; }
+.pcq-del-preset, .pcq-edit-preset { opacity: 0; transition: opacity 0.15s; }
+.pcq-preset-row:hover .pcq-del-preset, .pcq-preset-row:hover .pcq-edit-preset { opacity: 1; }
 
 /* ── Modal (in-panel) ─── */
 .pcq-modal-overlay {
@@ -628,12 +628,12 @@
 .pcq-modal-footer { display: flex; gap: 6px; justify-content: flex-end; padding: 10px 14px; border-top: 1px solid rgba(255,255,255,0.06); }
 .pcq-form-group { display: flex; flex-direction: column; gap: 3px; }
 .pcq-form-group label { font-size: 10px; font-weight: 600; color: #71717a; text-transform: uppercase; letter-spacing: 0.04em; }
-.pcq-form-group input, .pcq-form-group select {
+.pcq-form-group input, .pcq-form-group select, .pcq-form-group textarea {
   width: 100%; padding: 7px 9px; border-radius: 7px; box-sizing: border-box;
   border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04);
   color: #e4e4e7; font-size: 12px; font-family: inherit; outline: none; transition: all 0.2s;
 }
-.pcq-form-group input:focus, .pcq-form-group select:focus { border-color: rgba(165,180,252,0.3); box-shadow: 0 0 0 3px rgba(165,180,252,0.08); }
+.pcq-form-group input:focus, .pcq-form-group select:focus, .pcq-form-group textarea:focus { border-color: rgba(165,180,252,0.3); box-shadow: 0 0 0 3px rgba(165,180,252,0.08); }
 .pcq-form-group select { appearance: none; cursor: pointer; }
 .pcq-form-group select option { background: #1e1e2e; color: #e4e4e7; }
 
